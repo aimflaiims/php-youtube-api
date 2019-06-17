@@ -133,13 +133,17 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getVideoInfo($vId)
+    public function getVideoInfo($vId, $optionalParams = array())
     {
         $API_URL = $this->getApi('videos.list');
         $params = array(
             'id' => $vId,
             'part' => 'id, snippet, contentDetails, player, statistics, status'
         );
+
+        if (!empty($optionalParams)) {
+            $params = array_merge($params, $optionalParams);
+        }
 
         $apiData = $this->api_get($API_URL, $params);
         return $this->decodeSingle($apiData);
@@ -151,7 +155,7 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getVideosInfo($vIds)
+    public function getVideosInfo($vIds, $optionalParams = array())
     {
         $ids = is_array($vIds) ? implode(',', $vIds) : $vIds;
         $API_URL = $this->getApi('videos.list');
@@ -159,6 +163,10 @@ class Youtube
             'id' => $ids,
             'part' => 'id, snippet, contentDetails, player, statistics, status'
         );
+
+        if (!empty($optionalParams)) {
+            $params = array_merge($params, $optionalParams);
+        }
 
         $apiData = $this->api_get($API_URL, $params);
         return $this->decodeList($apiData);
@@ -304,14 +312,14 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getChannelByName($username, $optionalParams = false)
+    public function getChannelByName($username, $optionalParams = array())
     {
         $API_URL = $this->getApi('channels.list');
         $params = array(
             'forUsername' => $username,
             'part' => 'id,snippet,contentDetails,statistics,invideoPromotion'
         );
-        if ($optionalParams) {
+        if (!empty($optionalParams)) {
             $params = array_merge($params, $optionalParams);
         }
         $apiData = $this->api_get($API_URL, $params);
@@ -324,14 +332,14 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getChannelById($id, $optionalParams = false)
+    public function getChannelById($id, $optionalParams = array())
     {
         $API_URL = $this->getApi('channels.list');
         $params = array(
             'id' => $id,
             'part' => 'id,snippet,contentDetails,statistics,invideoPromotion'
         );
-        if ($optionalParams) {
+        if (!empty($optionalParams)) {
             $params = array_merge($params, $optionalParams);
         }
         $apiData = $this->api_get($API_URL, $params);
@@ -343,14 +351,14 @@ class Youtube
      * @return \StdClass
      * @throws \Exception
      */
-    public function getChannelsById($ids = array(), $optionalParams = false)
+    public function getChannelsById($ids = array(), $optionalParams = array())
     {
         $API_URL = $this->getApi('channels.list');
         $params = array(
             'id' => implode(',', $ids),
             'part' => 'id,snippet,contentDetails,statistics,invideoPromotion'
         );
-        if($optionalParams){
+        if(!empty($optionalParams)){
             $params = array_merge($params, $optionalParams);
         }
         $apiData = $this->api_get($API_URL, $params);
@@ -442,7 +450,7 @@ class Youtube
      * @return array
      * @throws \Exception
      */
-    public function getActivitiesByChannelId($channelId, $optionalParams = false)
+    public function getActivitiesByChannelId($channelId, $optionalParams = array())
     {
         if (empty($channelId)) {
             throw new \InvalidArgumentException('ChannelId must be supplied');
@@ -452,7 +460,7 @@ class Youtube
             'channelId' => $channelId,
             'part' => 'id, snippet, contentDetails'
         );
-        if ($optionalParams) {
+        if (!empty($optionalParams)) {
             $params = array_merge($params, $optionalParams);
         }
         $apiData = $this->api_get($API_URL, $params);
